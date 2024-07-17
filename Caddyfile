@@ -1,0 +1,8 @@
+:80 {
+    redir https://{host}{uri}
+}
+
+:443 {
+    reverse_proxy prestashop:80
+    tls luca.sain@outlook.com  # Reemplaza con tu email para obtener certificados SSL
+}

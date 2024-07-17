@@ -1,0 +1,13 @@
+# Dockerfile.prestashop
+FROM prestashop/prestashop:latest
+
+# Establece variables de entorno necesarias
+ENV PS_DEV_MODE=1
+ENV PS_INSTALL_AUTO=1
+ENV DB_SERVER=mysql
+ENV DB_NAME=prestashop
+ENV DB_USER=prestashop
+ENV DB_PASSWD=prestashop
+
+# Exponer el puerto 80 para el servidor web de PrestaShop
+EXPOSE 80
