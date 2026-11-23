@@ -1,0 +1,79 @@
+version: '3.9'
+
+services:
+  prestashop:
+    image: prestashop/prestashop:latest
+    restart: always
+    environment:
+      PS_DEV_MODE: '1'
+      PS_INSTALL_AUTO: '1'
+      DB_SERVER: mariadb
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWD: prestashop
+    volumes:
+      - prestashop_data:/var/www/html
+    depends_on:
+     - mariadb
+    networks:
+      - prestashop_network
+    ports:
+      - 80:80
+
+  # mysql:
+  #   image: mysql:5.7
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: rootpassword
+  #     MYSQL_DATABASE: prestashop
+  #     MYSQL_USER: prestashop
+  #     MYSQL_PASSWORD: prestashop
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: prestashop
+      MARIADB_USER: prestashop
+      MARIADB_PASSWORD: prestashop
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - prestashop_network
+    ports:
+      - 3306:3306
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - prestashop_network
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - prestashop
+    networks:
+      - prestashop_network
+
+volumes:
+  mysql_data:
+  prestashop_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  prestashop_network:

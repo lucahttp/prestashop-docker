@@ -1,5 +1,0 @@
-# Dockerfile.caddy
-FROM caddy:latest
-
-# Copia el archivo Caddyfile al contenedor
-COPY Caddyfile /etc/caddy/Caddyfile
